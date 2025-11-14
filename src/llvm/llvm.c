@@ -10,8 +10,7 @@
 #include "ast.h"
 #include "llvm_generator.h"
 
-void generate_llvm(struct Function_list function_list, const char* output_file,
-                   bool debug_active) {
+void generate_llvm(struct Function_list function_list, const char* output_file) {
     // Find main function
     LLVMContextRef context = LLVMContextCreate();
     const LLVMModuleRef module = LLVMModuleCreateWithName("module");
@@ -23,12 +22,12 @@ void generate_llvm(struct Function_list function_list, const char* output_file,
 
     // Print for debug
     llvm_generator_generate_function_ir(main_fun, &context, &module);
-    if (debug_active) {
-        char* ir = LLVMPrintModuleToString(module);
-        printf("\n[debug] Generated LLVM IR:\n");
-        printf("%s\n", ir);
-        LLVMDisposeMessage(ir);
-    }
+    #ifdef DEBUG
+    char* ir = LLVMPrintModuleToString(module);
+    printf("\n[debug] Generated LLVM IR:\n");
+    printf("%s\n", ir);
+    LLVMDisposeMessage(ir);
+    #endif
 
     // Module validation
     char* verify_error = NULL;

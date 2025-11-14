@@ -6,7 +6,7 @@
 int main(int argc, const char* argv[]) {
 
     struct Flags flags = get_arguments_flags(argc, argv);
-    compile_file(flags.file_name, flags.output_name, flags.debug_active);
+    compile_file(flags.file_name, flags.output_name);
 
     return 0;
 }
