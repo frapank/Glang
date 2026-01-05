@@ -12,7 +12,8 @@
 
 /* Var utils */
 static struct Variable* add_variable(struct Variable** head, const char* name,
-                                     LLVMValueRef ref, LLVMTypeRef type) {
+                                     LLVMValueRef ref, LLVMTypeRef type) 
+{
     struct Variable* var = malloc(sizeof(struct Variable));
     if (!var) {
         fprintf(stderr, "[-] Failed to allocate memory for variable\n");
@@ -25,7 +26,8 @@ static struct Variable* add_variable(struct Variable** head, const char* name,
     return var;
 }
 
-static LLVMTypeRef find_variable_type(struct Variable* head, const char* name) {
+static LLVMTypeRef find_variable_type(struct Variable* head, const char* name) 
+{
     while (head) {
         if (strcmp(head->name, name) == 0) {
             return head->type;
@@ -35,7 +37,8 @@ static LLVMTypeRef find_variable_type(struct Variable* head, const char* name) {
     return NULL;
 }
 
-LLVMValueRef find_variable(struct Variable* head, const char* name) {
+LLVMValueRef find_variable(struct Variable* head, const char* name) 
+{
     while (head) {
         if (strcmp(head->name, name) == 0) {
             return head->ref;
@@ -47,9 +50,10 @@ LLVMValueRef find_variable(struct Variable* head, const char* name) {
 
 /* Assign */
 void llvm_var_assign_number(const struct Node* node,
-                            struct Variable** variables,
-                            const LLVMBuilderRef builder,
-                            const LLVMTypeRef type) {
+        struct Variable** variables,
+        const LLVMBuilderRef builder,
+        const LLVMTypeRef type) 
+{
     LLVMValueRef var = LLVMBuildAlloca(builder, type, node->name);
     LLVMValueRef value;
 
@@ -79,9 +83,10 @@ void llvm_var_assign_number(const struct Node* node,
 }
 
 void llvm_var_assign_float(const struct Node* node,
-                           struct Variable** variables,
-                           const LLVMBuilderRef builder,
-                           const LLVMTypeRef float_type) {
+        struct Variable** variables,
+        const LLVMBuilderRef builder,
+        const LLVMTypeRef float_type) 
+{
     LLVMValueRef var = LLVMBuildAlloca(builder, float_type, node->name);
     LLVMValueRef value;
 
@@ -113,9 +118,10 @@ void llvm_var_assign_float(const struct Node* node,
 
 /* Reassign */
 void llvm_var_reassign_number(const struct Node* node,
-                              struct Variable** variables,
-                              const LLVMBuilderRef builder,
-                              const LLVMTypeRef type) {
+        struct Variable** variables,
+        const LLVMBuilderRef builder,
+        const LLVMTypeRef type) 
+{
     LLVMValueRef var = find_variable(*variables, node->name);
     LLVMTypeRef original_type = find_variable_type(*variables, node->name);
     if (!var) {
@@ -132,9 +138,10 @@ void llvm_var_reassign_number(const struct Node* node,
 }
 
 void llvm_var_reassign_float(const struct Node* node,
-                             struct Variable** variables,
-                             const LLVMBuilderRef builder,
-                             const LLVMTypeRef float_type) {
+        struct Variable** variables,
+        const LLVMBuilderRef builder,
+        const LLVMTypeRef float_type) 
+{
     LLVMValueRef var = find_variable(*variables, node->name);
     LLVMTypeRef type = find_variable_type(*variables, node->name);
     if (!var) {

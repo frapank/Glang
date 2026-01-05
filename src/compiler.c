@@ -5,8 +5,8 @@
 #include "llvm.h"
 #include "lexer_utils.h"
 
-__attribute__((noreturn, cold)) static void file_not_found_error(
-    const char* file_path) {
+_Noreturn static void file_not_found_error(const char* file_path) 
+{
     if (file_path == NULL)
         fprintf(stderr, "[-] You should specify an argument \n");
     else
@@ -14,12 +14,15 @@ __attribute__((noreturn, cold)) static void file_not_found_error(
     exit(1);
 }
 
-__attribute__((noreturn, cold)) static void memory_allocation_error() {
+
+_Noreturn static void memory_allocation_error() 
+{
     fprintf(stderr, "[-] Can't allocate memory \n");
     exit(1);
 }
 
-static struct Token* get_tokens(const char* file_path) {
+static struct Token* get_tokens(const char* file_path) 
+{
     FILE* file = fopen(file_path, "r");
     if (!file) file_not_found_error(file_path);
     struct Token* tokens = tokenizer(file);
@@ -37,7 +40,8 @@ static struct Token* get_tokens(const char* file_path) {
     return tokens;
 }
 
-static struct Function_list parse_functions(const struct Token* tokens) {
+static struct Function_list parse_functions(const struct Token* tokens) 
+{
     struct Function_list function_list = {.functions = NULL, .count = 0};
     int current_index = 0;
     while (tokens[current_index].type != TOKEN_OEF) {
@@ -58,7 +62,8 @@ static struct Function_list parse_functions(const struct Token* tokens) {
     return function_list;
 }
 
-void compile_file(const char* file_path, const char* file_output) {
+void compile_file(const char* file_path, const char* file_output) 
+{
     printf("[+] Generating tokens... \n");
     const struct Token* tokens = get_tokens(file_path);
     printf("[+] Parsing tokens... \n");

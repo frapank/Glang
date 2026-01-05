@@ -10,7 +10,8 @@
 #include "ast.h"
 #include "llvm_generator.h"
 
-void generate_llvm(struct Function_list function_list, const char* output_file) {
+void generate_llvm(struct Function_list function_list, const char* output_file)
+{
     // Find main function
     LLVMContextRef context = LLVMContextCreate();
     const LLVMModuleRef module = LLVMModuleCreateWithName("module");
@@ -84,4 +85,3 @@ void generate_llvm(struct Function_list function_list, const char* output_file) 
     LLVMDisposeModule(module);
     LLVMContextDispose(context);
 }
-

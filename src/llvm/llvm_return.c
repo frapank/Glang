@@ -9,7 +9,8 @@
 
 void llvm_return_generate_return(const LLVMBuilderRef builder, struct Variable* variables,
                      struct Function* fun, const struct Node* node,
-                     struct LLVMTypeTable types_table) {
+                     struct LLVMTypeTable types_table) 
+{
     switch (fun->return_type) {
         case RET_VOID:
             LLVMBuildRetVoid(builder);

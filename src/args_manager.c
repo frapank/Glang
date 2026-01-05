@@ -13,7 +13,8 @@
 #include <unistd.h>
 #endif
 
-__attribute__((noreturn)) static void print_help_page(void) {
+_Noreturn static void print_help_page(void) 
+{
     bool use_colors = isatty(fileno(stdout));
 
     const char *RESET = use_colors ? "\033[0m" : "";
@@ -33,7 +34,8 @@ __attribute__((noreturn)) static void print_help_page(void) {
     exit(0);
 }
 
-struct Flags get_arguments_flags(int argc, const char *argv[]) {
+struct Flags get_arguments_flags(int argc, const char *argv[]) 
+{
     struct Flags flags = {0};
     strncpy(flags.output_name, "output", sizeof(flags.output_name) - 1);
 

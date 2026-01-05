@@ -18,7 +18,8 @@
     } while (0)
 
 struct Node* transform_into_node(const struct Token* tokens,
-                                 int* current_index) {
+                                 int* current_index) 
+{
     struct Node* node = calloc(1, sizeof(struct Node));
     check_if_allocated(node, __LINE__);
 
@@ -76,7 +77,8 @@ struct Node* transform_into_node(const struct Token* tokens,
     exit(1);
 }
 
-struct Function parse_function(const struct Token* tokens, int* current_index) {
+struct Function parse_function(const struct Token* tokens, int* current_index) 
+{
     struct Function fun = {0};
 
     if (tokens[*current_index].type != TOKEN_FUNCTION ||
@@ -163,8 +165,9 @@ struct Function parse_function(const struct Token* tokens, int* current_index) {
     return fun;
 }
 
-struct Function* get_function_by_name(
-    const char* name, const struct Function_list function_list) {
+struct Function* get_function_by_name(const char* name, 
+        const struct Function_list function_list) 
+{
     for (int i = 0; i < function_list.count; i++) {
         if (strcmp(function_list.functions[i]->name, name) == 0) {
             return function_list.functions[i];
@@ -174,7 +177,8 @@ struct Function* get_function_by_name(
 }
 
 struct Argument* parse_param(const struct Token* tokens,
-                             const int first_param_index) {
+                             const int first_param_index) 
+{
     int index = first_param_index;
     int arg_count = 0;
 
@@ -231,7 +235,8 @@ struct Argument* parse_param(const struct Token* tokens,
 }
 
 void add_function_to_list(struct Function* fun,
-                          struct Function_list* function_list) {
+                          struct Function_list* function_list) 
+{
     function_list->functions =
         realloc(function_list->functions,
                 sizeof(struct Function*) * (function_list->count + 1));

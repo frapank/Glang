@@ -10,7 +10,8 @@
 #define INIT_TOKEN_CAPACITY 16
 
 static struct Token first_token(const char buffer[MAX_TOKEN_VALUE],
-                                char current_char) {
+        char current_char) 
+{
     struct Token temp;
 
     if (strcmp(buffer, "int") == TRUE) {
@@ -69,7 +70,8 @@ static struct Token first_token(const char buffer[MAX_TOKEN_VALUE],
 }
 
 static void push_token(struct Token** tokens, const struct Token* token,
-                       int* tokens_capacity, int* tokens_count) {
+        int* tokens_capacity, int* tokens_count) 
+{
     if (*tokens_count >= *tokens_capacity) {
         *tokens_capacity *= 2;
         struct Token* new_tokens =
@@ -84,7 +86,8 @@ static void push_token(struct Token** tokens, const struct Token* token,
     (*tokens_count)++;
 }
 
-struct Token* tokenizer(FILE* file) {
+struct Token* tokenizer(FILE* file) 
+{
     char line[MAX_LINE_LEN];
     unsigned int column = 0;
 
@@ -97,7 +100,7 @@ struct Token* tokenizer(FILE* file) {
     }
 
     char buffer[MAX_TOKEN_VALUE];
-    int count = 0;
+    size_t count = 0;
     buffer[0] = '\0';
 
     while (fgets(line, sizeof(line), file)) {
@@ -372,4 +375,3 @@ struct Token* tokenizer(FILE* file) {
 
     return tokens;
 }
-

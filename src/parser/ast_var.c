@@ -10,7 +10,8 @@
 #define PEEK(i) (tokens[*current_index + (i)])
 
 struct Node* var_assign_int(const struct Token* tokens, int* current_index,
-                            struct Node* node) {
+                            struct Node* node) 
+{
     if (PEEK(0).type == TOKEN_INT && PEEK(1).type == TOKEN_IDENTIFIER) {
         node->identifier[0] = '\0';
         node->use_identifier = false;
@@ -65,7 +66,8 @@ struct Node* var_assign_int(const struct Token* tokens, int* current_index,
 }
 
 struct Node* var_assign_float(const struct Token* tokens, int* current_index,
-                              struct Node* node) {
+                              struct Node* node) 
+{
     if (PEEK(0).type == TOKEN_FLOAT && PEEK(1).type == TOKEN_IDENTIFIER) {
         node->identifier[0] = '\0';
         node->use_identifier = false;
@@ -122,7 +124,8 @@ struct Node* var_assign_float(const struct Token* tokens, int* current_index,
 
 
 struct Node* var_assign_char(const struct Token* tokens, int* current_index,
-                             struct Node* node) {
+                             struct Node* node) 
+{
     if (PEEK(0).type == TOKEN_CHAR && PEEK(1).type == TOKEN_IDENTIFIER) {
         node->identifier[0] = '\0';
         node->use_identifier = false;
@@ -152,7 +155,8 @@ struct Node* var_assign_char(const struct Token* tokens, int* current_index,
 }
 
 struct Node* var_assign_let(const struct Token* tokens, int* current_index,
-                            struct Node* node) {
+                            struct Node* node) 
+{
     if (PEEK(0).type != TOKEN_LET) {
         return NULL;
     }
@@ -222,7 +226,8 @@ struct Node* var_assign_let(const struct Token* tokens, int* current_index,
 
 // -- reassign --
 struct Node* var_reassign_int(const struct Token* tokens, int* current_index,
-                              struct Node* node) {
+                              struct Node* node) 
+{
     if (PEEK(0).type == TOKEN_IDENTIFIER && PEEK(1).type == TOKEN_ASSIGN) {
         strncpy(node->name, PEEK(0).value, sizeof(node->name));
         int val;
@@ -246,7 +251,8 @@ struct Node* var_reassign_int(const struct Token* tokens, int* current_index,
 }
 
 struct Node* var_reassign_float(const struct Token* tokens, int* current_index,
-                                struct Node* node) {
+                                struct Node* node) 
+{
     if (PEEK(0).type == TOKEN_IDENTIFIER && PEEK(1).type == TOKEN_ASSIGN) {
         strncpy(node->name, PEEK(0).value, sizeof(node->name));
         double val;
@@ -270,7 +276,8 @@ struct Node* var_reassign_float(const struct Token* tokens, int* current_index,
 }
 
 struct Node* var_reassign_char(const struct Token* tokens, int* current_index,
-                               struct Node* node) {
+                               struct Node* node) 
+{
     if (PEEK(0).type == TOKEN_IDENTIFIER && PEEK(1).type == TOKEN_ASSIGN &&
         PEEK(2).type == TOKEN_LETTER && PEEK(3).type == TOKEN_END) {
         strncpy(node->name, PEEK(0).value, sizeof(node->name));
