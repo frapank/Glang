@@ -5,7 +5,7 @@
 #include "ast_types.h"
 
 struct Variable {
-    char name[64];
+    char name[256];
     LLVMValueRef ref;
     LLVMTypeRef type;
     struct Variable* next;

@@ -19,7 +19,7 @@ static struct Variable* add_variable(struct Variable** head, const char* name,
         fprintf(stderr, "[-] Failed to allocate memory for variable\n");
         exit(1);
     }
-    strncpy(var->name, name, sizeof(var->name));
+    snprintf(var->name, sizeof(var->name), "%s", name);
     var->ref = ref;
     var->next = *head;
     var->type = type;

@@ -5,7 +5,6 @@
 
 #include "ast_utils.h"
 #include "error_utils.h"
-#include "ast_if.h"
 #include "lexer.h"
 #include "ast_var.h"
 
@@ -25,13 +24,6 @@ struct Node* transform_into_node(const struct Token* tokens,
 
     node->column = PEEK(0).column;
     strncpy(node->full_line, PEEK(0).full_line, sizeof(node->full_line));
-
-    // TODO: If
-    if (PEEK(0).type == TOKEN_IDENTIFIER && strcmp(PEEK(0).value, "if") == 0) {
-        printf("[+] Found if \n");
-        node = parse_if(tokens, current_index);
-        return node;
-    }
 
     // Var
     TRY_PARSE(var_reassign_char);

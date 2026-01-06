@@ -22,7 +22,7 @@ void generate_llvm(struct Function_list function_list, const char* output_file)
     }
 
     // Print for debug
-    llvm_generator_generate_function_ir(main_fun, &context, &module);
+    llvm_generator_generate_function_ir(main_fun, &module);
     #ifdef DEBUG
     char* ir = LLVMPrintModuleToString(module);
     printf("\n[debug] Generated LLVM IR:\n");

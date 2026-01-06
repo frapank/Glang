@@ -9,8 +9,7 @@
 #define TRUE 0
 #define INIT_TOKEN_CAPACITY 16
 
-static struct Token first_token(const char buffer[MAX_TOKEN_VALUE],
-        char current_char) 
+static struct Token first_token(const char buffer[MAX_TOKEN_VALUE]) 
 {
     struct Token temp;
 
@@ -107,7 +106,7 @@ struct Token* tokenizer(FILE* file)
         column++;
         size_t line_lenght = strlen(line);
 
-        for (int line_position = 0; line_position < line_lenght;
+        for (size_t line_position = 0; line_position < line_lenght;
              line_position++) {
             char current_char = line[line_position];
 
@@ -157,7 +156,7 @@ struct Token* tokenizer(FILE* file)
             if (isspace(current_char)) {
                 if (count > 0) {
                     buffer[count] = '\0';
-                    struct Token temp = first_token(buffer, current_char);
+                    struct Token temp = first_token(buffer);
                     temp.column = column;
                     strncpy(temp.full_line, line, sizeof(temp.full_line));
                     push_token(&tokens, &temp, &tokens_capacity, &tokens_count);
@@ -188,7 +187,7 @@ struct Token* tokenizer(FILE* file)
             if (strchr("|=,;:{}()>&<!*.+-/", current_char)) {
                 if (count > 0) {
                     buffer[count] = '\0';
-                    struct Token temp = first_token(buffer, current_char);
+                    struct Token temp = first_token(buffer);
                     temp.column = current_char;
                     strncpy(temp.full_line, line, sizeof(temp.full_line));
                     push_token(&tokens, &temp, &tokens_capacity, &tokens_count);
@@ -358,7 +357,7 @@ struct Token* tokenizer(FILE* file)
     // If buffer has leftover data at EOF
     if (count > 0) {
         buffer[count] = '\0';
-        struct Token temp = first_token(buffer, '\0');
+        struct Token temp = first_token(buffer);
         temp.column = column;
         strncpy(temp.full_line, "end", sizeof(temp.full_line));
         push_token(&tokens, &temp, &tokens_capacity, &tokens_count);

@@ -32,7 +32,6 @@ static LLVMTypeRef find_return_type(struct Function* fun,
 }
 
 void llvm_generator_generate_function_ir(struct Function* fun,
-        LLVMContextRef* context,
         const LLVMModuleRef* module) 
 {
     // Default types
