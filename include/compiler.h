@@ -3,6 +3,6 @@
 
 #include <stdbool.h>
 
-void compile_file(const char* file_path, const char* file_output);
+void compile_file();
 
 #endif

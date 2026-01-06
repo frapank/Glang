@@ -4,6 +4,7 @@
 #include "ast.h"
 #include "llvm.h"
 #include "lexer_utils.h"
+#include "compiler_opts.h"
 
 _Noreturn static void file_not_found_error(const char* file_path) 
 {
@@ -62,12 +63,13 @@ static struct Function_list parse_functions(const struct Token* tokens)
     return function_list;
 }
 
-void compile_file(const char* file_path, const char* file_output) 
+void compile_file() 
 {
+    const struct compiler_opts* copts = compiler_opts_get();
     printf("[+] Generating tokens... \n");
-    const struct Token* tokens = get_tokens(file_path);
+    const struct Token* tokens = get_tokens(copts->file_path);
     printf("[+] Parsing tokens... \n");
     const struct Function_list function_list = parse_functions(tokens);
     printf("[+] Generating llvm... \n");
-    generate_llvm(function_list, file_output);
+    generate_llvm(function_list, copts->output_path);
 }
