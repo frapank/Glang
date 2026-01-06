@@ -2,9 +2,9 @@
 #define LLVM_GENERATOR_H
 
 #include <llvm-c/Core.h>
-struct Function;
+struct function;
 
-void llvm_generator_generate_function_ir(struct Function* fun,
+void llvm_generator_function_ir(struct function* fun,
                                  const LLVMModuleRef* module);
 
 #endif

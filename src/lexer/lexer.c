@@ -9,9 +9,9 @@
 #define TRUE 0
 #define INIT_TOKEN_CAPACITY 16
 
-static struct Token first_token(const char buffer[MAX_TOKEN_VALUE]) 
+static struct token token_first(const char buffer[MAX_TOKEN_VALUE]) 
 {
-    struct Token temp;
+    struct token temp;
 
     if (strcmp(buffer, "int") == TRUE) {
         temp.type = TOKEN_INT;
@@ -68,13 +68,13 @@ static struct Token first_token(const char buffer[MAX_TOKEN_VALUE])
     return temp;
 }
 
-static void push_token(struct Token** tokens, const struct Token* token,
+static void token_push(struct token** tokens, const struct token* token,
         int* tokens_capacity, int* tokens_count) 
 {
     if (*tokens_count >= *tokens_capacity) {
         *tokens_capacity *= 2;
-        struct Token* new_tokens =
-            realloc(*tokens, sizeof(struct Token) * (*tokens_capacity));
+        struct token* new_tokens =
+            realloc(*tokens, sizeof(struct token) * (*tokens_capacity));
         if (!new_tokens) {
             perror("[-] Can't allocate new space \n");
             exit(1);
@@ -85,14 +85,14 @@ static void push_token(struct Token** tokens, const struct Token* token,
     (*tokens_count)++;
 }
 
-struct Token* tokenizer(FILE* file) 
+struct token* token_process(FILE* file) 
 {
     char line[MAX_LINE_LEN];
     unsigned int column = 0;
 
     int tokens_capacity = INIT_TOKEN_CAPACITY;
     int tokens_count = 0;
-    struct Token* tokens = malloc(sizeof(struct Token) * tokens_capacity);
+    struct token* tokens = malloc(sizeof(struct token) * tokens_capacity);
     if (tokens == NULL) {
         fprintf(stderr, "[-] Can't allocate memory for token");
         exit(1);
@@ -112,7 +112,7 @@ struct Token* tokenizer(FILE* file)
 
             // TEXT
             if (current_char == '"') {
-                struct Token temp = {0};
+                struct token temp = {0};
                 temp.type = TOKEN_TEXT;
                 int ti = 0;
                 unsigned int start_col = column;
@@ -127,13 +127,13 @@ struct Token* tokenizer(FILE* file)
                 temp.column = start_col;
                 strncpy(temp.full_line, line, sizeof(temp.full_line));
 
-                push_token(&tokens, &temp, &tokens_capacity, &tokens_count);
+                token_push(&tokens, &temp, &tokens_capacity, &tokens_count);
                 continue;
             }
 
             // LETTER
             if (current_char == '\'') {
-                struct Token temp = {0};
+                struct token temp = {0};
                 temp.type = TOKEN_LETTER;
                 int ti = 0;
                 unsigned int start_col = column;
@@ -148,7 +148,7 @@ struct Token* tokenizer(FILE* file)
                 temp.column = start_col;
                 strncpy(temp.full_line, line, sizeof(temp.full_line));
 
-                push_token(&tokens, &temp, &tokens_capacity, &tokens_count);
+                token_push(&tokens, &temp, &tokens_capacity, &tokens_count);
                 continue;
             }
 
@@ -156,10 +156,10 @@ struct Token* tokenizer(FILE* file)
             if (isspace(current_char)) {
                 if (count > 0) {
                     buffer[count] = '\0';
-                    struct Token temp = first_token(buffer);
+                    struct token temp = token_first(buffer);
                     temp.column = column;
                     strncpy(temp.full_line, line, sizeof(temp.full_line));
-                    push_token(&tokens, &temp, &tokens_capacity, &tokens_count);
+                    token_push(&tokens, &temp, &tokens_capacity, &tokens_count);
                     count = 0;
                     buffer[0] = '\0';
                 }
@@ -187,15 +187,15 @@ struct Token* tokenizer(FILE* file)
             if (strchr("|=,;:{}()>&<!*.+-/", current_char)) {
                 if (count > 0) {
                     buffer[count] = '\0';
-                    struct Token temp = first_token(buffer);
+                    struct token temp = token_first(buffer);
                     temp.column = current_char;
                     strncpy(temp.full_line, line, sizeof(temp.full_line));
-                    push_token(&tokens, &temp, &tokens_capacity, &tokens_count);
+                    token_push(&tokens, &temp, &tokens_capacity, &tokens_count);
                     count = 0;
                     buffer[0] = '\0';
                 }
                 int next;
-                struct Token temp = {0};
+                struct token temp = {0};
                 switch (current_char) {
                     case '|':
                         next = fgetc(file);
@@ -345,7 +345,7 @@ struct Token* tokenizer(FILE* file)
 
                 temp.column = column;
                 strncpy(temp.full_line, line, sizeof(temp.full_line));
-                push_token(&tokens, &temp, &tokens_capacity, &tokens_count);
+                token_push(&tokens, &temp, &tokens_capacity, &tokens_count);
                 continue;
             }
 
@@ -357,20 +357,20 @@ struct Token* tokenizer(FILE* file)
     // If buffer has leftover data at EOF
     if (count > 0) {
         buffer[count] = '\0';
-        struct Token temp = first_token(buffer);
+        struct token temp = token_first(buffer);
         temp.column = column;
         strncpy(temp.full_line, "end", sizeof(temp.full_line));
-        push_token(&tokens, &temp, &tokens_capacity, &tokens_count);
+        token_push(&tokens, &temp, &tokens_capacity, &tokens_count);
         printf("[EOF-TOKEN] %s\n", temp.value);
     }
 
     // Add OEF token
-    struct Token finish = {0};
+    struct token finish = {0};
     finish.type = TOKEN_OEF;
     strncpy(finish.value, "OEF", sizeof(finish.value));
     finish.column = column;
     strncpy(finish.full_line, "end", sizeof(finish.full_line));
-    push_token(&tokens, &finish, &tokens_capacity, &tokens_count);
+    token_push(&tokens, &finish, &tokens_capacity, &tokens_count);
 
     return tokens;
 }

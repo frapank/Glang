@@ -7,8 +7,8 @@
 #include "llvm_types.h"
 #include "llvm_var.h"
 
-void llvm_return_generate_return(const LLVMBuilderRef builder, struct Variable* variables,
-                     struct Function* fun, const struct Node* node,
+void llvm_return_generate_return(const LLVMBuilderRef builder, struct variable* variables,
+                     struct function* fun, const struct node* node,
                      struct LLVMTypeTable types_table) 
 {
     switch (fun->return_type) {
@@ -18,7 +18,7 @@ void llvm_return_generate_return(const LLVMBuilderRef builder, struct Variable* 
 
         case RET_INT: {
             if (node->name[0] != '\0') {
-                LLVMValueRef var = find_variable(variables, node->name);
+                LLVMValueRef var = llvm_find_variable(variables, node->name);
                 if (!var) {
                     send_syntax_error_by_line(node->full_line, node->column,
                                               "Variable not declared");
@@ -36,7 +36,7 @@ void llvm_return_generate_return(const LLVMBuilderRef builder, struct Variable* 
 
         case RET_FLOAT: {
             if (node->name[0] != '\0') {
-                LLVMValueRef var = find_variable(variables, node->name);
+                LLVMValueRef var = llvm_find_variable(variables, node->name);
                 if (!var) {
                     send_syntax_error_by_line(node->full_line, node->column,
                                               "Variable not declared");
@@ -54,7 +54,7 @@ void llvm_return_generate_return(const LLVMBuilderRef builder, struct Variable* 
 
         case RET_CHAR: {
             if (node->name[0] != '\0') {
-                LLVMValueRef var = find_variable(variables, node->name);
+                LLVMValueRef var = llvm_find_variable(variables, node->name);
                 if (!var) {
                     send_syntax_error_by_line(node->full_line, node->column,
                                               "Variable not declared");

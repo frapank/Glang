@@ -8,7 +8,7 @@
 #include "llvm_types.h"
 #include "llvm_var.h"
 
-static LLVMTypeRef find_return_type(struct Function* fun,
+static LLVMTypeRef llvm_find_return_type(struct function* fun,
         const struct LLVMTypeTable* table) 
 {
     switch (fun->return_type) {
@@ -31,7 +31,7 @@ static LLVMTypeRef find_return_type(struct Function* fun,
     }
 }
 
-void llvm_generator_generate_function_ir(struct Function* fun,
+void llvm_generator_function_ir(struct function* fun,
         const LLVMModuleRef* module) 
 {
     // Default types
@@ -39,7 +39,7 @@ void llvm_generator_generate_function_ir(struct Function* fun,
                                               LLVMFloatType(), LLVMInt8Type()};
 
     // Find function return type
-    LLVMTypeRef return_type = find_return_type(fun, &types_table);
+    LLVMTypeRef return_type = llvm_find_return_type(fun, &types_table);
     const LLVMTypeRef funcType =
         LLVMFunctionType(return_type, NULL, 0, 0);  // TODO: Add more args
     const LLVMValueRef func = LLVMAddFunction(*module, fun->name, funcType);
@@ -47,8 +47,8 @@ void llvm_generator_generate_function_ir(struct Function* fun,
     const LLVMBuilderRef builder = LLVMCreateBuilder();
     LLVMPositionBuilderAtEnd(builder, entry);
 
-    const struct Node* node = fun->body->body;
-    struct Variable* variables = NULL;
+    const struct node* node = fun->body->body;
+    struct variable* variables = NULL;
     while (node != NULL) {
         switch (node->type) {
             case NO_REASSIGN_INT: {
@@ -118,4 +118,3 @@ void llvm_generator_generate_function_ir(struct Function* fun,
         node = node->next;
     }
 }
-

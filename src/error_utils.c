@@ -35,7 +35,7 @@ void send_syntax_error_by_line(const char* line, const int column,
             RED, RESET, column, error, line);
 }
 
-void send_syntax_error(const struct Token* token, const char* error) 
+void send_syntax_error(const struct token* token, const char* error) 
 {
     if (!token) return;
 

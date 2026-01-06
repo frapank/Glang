@@ -12,28 +12,28 @@
 
 #define TRY_PARSE(f)                                      \
     do {                                                  \
-        struct Node* _n = f(tokens, current_index, node); \
+        struct node* _n = f(tokens, current_index, node); \
         if (_n != NULL) return _n;                        \
     } while (0)
 
-struct Node* transform_into_node(const struct Token* tokens,
+struct node* ast_transform_into_node(const struct token* tokens,
                                  int* current_index) 
 {
-    struct Node* node = calloc(1, sizeof(struct Node));
-    check_if_allocated(node, __LINE__);
+    struct node* node = calloc(1, sizeof(struct node));
+    ast_check_if_allocated(node, __LINE__);
 
     node->column = PEEK(0).column;
     strncpy(node->full_line, PEEK(0).full_line, sizeof(node->full_line));
 
     // Var
-    TRY_PARSE(var_reassign_char);
-    TRY_PARSE(var_reassign_float);
-    TRY_PARSE(var_reassign_int);
+    TRY_PARSE(ast_var_reassign_char);
+    TRY_PARSE(ast_var_reassign_float);
+    TRY_PARSE(ast_var_reassign_int);
 
-    TRY_PARSE(var_assign_let);
-    TRY_PARSE(var_assign_int);
-    TRY_PARSE(var_assign_float);
-    TRY_PARSE(var_assign_char);
+    TRY_PARSE(ast_var_assign_let);
+    TRY_PARSE(ast_var_assign_int);
+    TRY_PARSE(ast_var_assign_float);
+    TRY_PARSE(ast_var_assign_char);
 
     // Return
     if (PEEK(0).type == TOKEN_IDENTIFIER &&
@@ -69,9 +69,9 @@ struct Node* transform_into_node(const struct Token* tokens,
     exit(1);
 }
 
-struct Function parse_function(const struct Token* tokens, int* current_index) 
+struct function ast_parse_function(const struct token* tokens, int* current_index) 
 {
-    struct Function fun = {0};
+    struct function fun = {0};
 
     if (tokens[*current_index].type != TOKEN_FUNCTION ||
         tokens[*current_index + 1].type != TOKEN_IDENTIFIER ||
@@ -84,7 +84,7 @@ struct Function parse_function(const struct Token* tokens, int* current_index)
 
     *current_index += 3;
 
-    fun.arguments = parse_param(tokens, *current_index);
+    fun.arguments = ast_parse_param(tokens, *current_index);
 
     while (tokens[*current_index].type != TOKEN_RPAREN &&
            tokens[*current_index].type != TOKEN_OEF) {
@@ -98,7 +98,7 @@ struct Function parse_function(const struct Token* tokens, int* current_index)
     fun.return_type = RET_VOID;
 
     if (tokens[*current_index].type == TOKEN_COLON) {
-        const struct Token ret_type_token = tokens[*current_index + 1];
+        const struct token ret_type_token = tokens[*current_index + 1];
         if (ret_type_token.type == TOKEN_INT) {
             fun.return_type = RET_INT;
         } else if (ret_type_token.type == TOKEN_CHAR) {
@@ -123,16 +123,16 @@ struct Function parse_function(const struct Token* tokens, int* current_index)
     }
     (*current_index)++;
 
-    struct Node* body = calloc(1, sizeof(struct Node));
-    check_if_allocated(body, __LINE__);
+    struct node* body = calloc(1, sizeof(struct node));
+    ast_check_if_allocated(body, __LINE__);
     body->type = NO_BODY;
 
-    struct Node* last = NULL;
+    struct node* last = NULL;
     int node_count = 0;
 
     while (tokens[*current_index].type != TOKEN_RBRACE &&
            tokens[*current_index].type != TOKEN_OEF) {
-        struct Node* node = transform_into_node(tokens, current_index);
+        struct node* node = ast_transform_into_node(tokens, current_index);
         if (body->body == NULL) {
             body->body = node;
         } else {
@@ -157,8 +157,8 @@ struct Function parse_function(const struct Token* tokens, int* current_index)
     return fun;
 }
 
-struct Function* get_function_by_name(const char* name, 
-        const struct Function_list function_list) 
+struct function* ast_get_function_by_name(const char* name, 
+        const struct function_list function_list) 
 {
     for (int i = 0; i < function_list.count; i++) {
         if (strcmp(function_list.functions[i]->name, name) == 0) {
@@ -168,7 +168,7 @@ struct Function* get_function_by_name(const char* name,
     return NULL;
 }
 
-struct Argument* parse_param(const struct Token* tokens,
+struct argument* ast_parse_param(const struct token* tokens,
                              const int first_param_index) 
 {
     int index = first_param_index;
@@ -188,17 +188,17 @@ struct Argument* parse_param(const struct Token* tokens,
         }
     }
 
-    struct Argument* arguments = NULL;
+    struct argument* arguments = NULL;
     if (arg_count > 0) {
-        arguments = calloc(arg_count, sizeof(struct Argument));
-        check_if_allocated(arguments, __LINE__);
+        arguments = calloc(arg_count, sizeof(struct argument));
+        ast_check_if_allocated(arguments, __LINE__);
     }
 
     index = first_param_index;
     int arg_index = 0;
     while (tokens[index].type != TOKEN_RPAREN &&
            tokens[index].type != TOKEN_OEF) {
-        struct Argument arg;
+        struct argument arg;
 
         switch (tokens[index].type) {
             case TOKEN_INT:
@@ -226,12 +226,12 @@ struct Argument* parse_param(const struct Token* tokens,
     return arguments;
 }
 
-void add_function_to_list(struct Function* fun,
-                          struct Function_list* function_list) 
+void ast_add_function_to_list(struct function* fun,
+                          struct function_list* function_list) 
 {
     function_list->functions =
         realloc(function_list->functions,
-                sizeof(struct Function*) * (function_list->count + 1));
+                sizeof(struct function*) * (function_list->count + 1));
 
     if (!function_list->functions) {
         fprintf(stderr, "[-] Error reallocating memory for function list\n");

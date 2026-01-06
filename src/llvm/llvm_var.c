@@ -11,10 +11,10 @@
 #include "error_utils.h"
 
 /* Var utils */
-static struct Variable* add_variable(struct Variable** head, const char* name,
+static struct variable* llvm_variable_add(struct variable** head, const char* name,
                                      LLVMValueRef ref, LLVMTypeRef type) 
 {
-    struct Variable* var = malloc(sizeof(struct Variable));
+    struct variable* var = malloc(sizeof(struct variable));
     if (!var) {
         fprintf(stderr, "[-] Failed to allocate memory for variable\n");
         exit(1);
@@ -26,7 +26,7 @@ static struct Variable* add_variable(struct Variable** head, const char* name,
     return var;
 }
 
-static LLVMTypeRef find_variable_type(struct Variable* head, const char* name) 
+static LLVMTypeRef llvm_variable_find_type(struct variable* head, const char* name) 
 {
     while (head) {
         if (strcmp(head->name, name) == 0) {
@@ -37,7 +37,7 @@ static LLVMTypeRef find_variable_type(struct Variable* head, const char* name)
     return NULL;
 }
 
-LLVMValueRef find_variable(struct Variable* head, const char* name) 
+LLVMValueRef llvm_find_variable(struct variable* head, const char* name) 
 {
     while (head) {
         if (strcmp(head->name, name) == 0) {
@@ -49,8 +49,8 @@ LLVMValueRef find_variable(struct Variable* head, const char* name)
 }
 
 /* Assign */
-void llvm_var_assign_number(const struct Node* node,
-        struct Variable** variables,
+void llvm_var_assign_number(const struct node* node,
+        struct variable** variables,
         const LLVMBuilderRef builder,
         const LLVMTypeRef type) 
 {
@@ -58,8 +58,8 @@ void llvm_var_assign_number(const struct Node* node,
     LLVMValueRef value;
 
     if (node->use_identifier) {
-        LLVMValueRef source = find_variable(*variables, node->identifier);
-        LLVMTypeRef source_type = find_variable_type(*variables, node->identifier);
+        LLVMValueRef source = llvm_find_variable(*variables, node->identifier);
+        LLVMTypeRef source_type = llvm_variable_find_type(*variables, node->identifier);
 
         if (!source) {
             send_syntax_error_by_line(node->full_line, node->column,
@@ -79,11 +79,11 @@ void llvm_var_assign_number(const struct Node* node,
     }
 
     LLVMBuildStore(builder, value, var);
-    *variables = add_variable(variables, node->name, var, type);
+    *variables = llvm_variable_add(variables, node->name, var, type);
 }
 
-void llvm_var_assign_float(const struct Node* node,
-        struct Variable** variables,
+void llvm_var_assign_float(const struct node* node,
+        struct variable** variables,
         const LLVMBuilderRef builder,
         const LLVMTypeRef float_type) 
 {
@@ -91,8 +91,8 @@ void llvm_var_assign_float(const struct Node* node,
     LLVMValueRef value;
 
     if (node->use_identifier) {
-        LLVMValueRef source = find_variable(*variables, node->identifier);
-        LLVMTypeRef source_type = find_variable_type(*variables, node->identifier);
+        LLVMValueRef source = llvm_find_variable(*variables, node->identifier);
+        LLVMTypeRef source_type = llvm_variable_find_type(*variables, node->identifier);
 
         if (!source) {
             send_syntax_error_by_line(node->full_line, node->column,
@@ -112,18 +112,18 @@ void llvm_var_assign_float(const struct Node* node,
     }
 
     LLVMBuildStore(builder, value, var);
-    *variables = add_variable(variables, node->name, var, float_type);
+    *variables = llvm_variable_add(variables, node->name, var, float_type);
 }
 
 
 /* Reassign */
-void llvm_var_reassign_number(const struct Node* node,
-        struct Variable** variables,
+void llvm_var_reassign_number(const struct node* node,
+        struct variable** variables,
         const LLVMBuilderRef builder,
         const LLVMTypeRef type) 
 {
-    LLVMValueRef var = find_variable(*variables, node->name);
-    LLVMTypeRef original_type = find_variable_type(*variables, node->name);
+    LLVMValueRef var = llvm_find_variable(*variables, node->name);
+    LLVMTypeRef original_type = llvm_variable_find_type(*variables, node->name);
     if (!var) {
         send_syntax_error_by_line(node->full_line, node->column,
                                   "Variable used before declaration");
@@ -137,13 +137,13 @@ void llvm_var_reassign_number(const struct Node* node,
     LLVMBuildStore(builder, LLVMConstInt(type, node->number, 0), var);
 }
 
-void llvm_var_reassign_float(const struct Node* node,
-        struct Variable** variables,
+void llvm_var_reassign_float(const struct node* node,
+        struct variable** variables,
         const LLVMBuilderRef builder,
         const LLVMTypeRef float_type) 
 {
-    LLVMValueRef var = find_variable(*variables, node->name);
-    LLVMTypeRef type = find_variable_type(*variables, node->name);
+    LLVMValueRef var = llvm_find_variable(*variables, node->name);
+    LLVMTypeRef type = llvm_variable_find_type(*variables, node->name);
     if (!var) {
         send_syntax_error_by_line(node->full_line, node->column,
                                   "Variable used before declaration");

@@ -3,6 +3,6 @@
 
 #include <stdbool.h>
 
-void compile_file();
+void compile_file(void);
 
 #endif

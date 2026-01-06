@@ -4,7 +4,7 @@
 #include <stdio.h>
 #define MAX_LINE_LEN 1024
 
-enum Token_type {
+enum token_type {
     TOKEN_LET,    // let
     TOKEN_VOID,   // void
     TOKEN_INT,    // 0
@@ -50,13 +50,13 @@ enum Token_type {
     TOKEN_OEF,
 };
 
-struct Token {
-    enum Token_type type;
+struct token {
+    enum token_type type;
     char value[256];
     int column;
     char full_line[MAX_LINE_LEN];
 };
 
-struct Token* tokenizer(FILE* file);
+struct token* token_process(FILE* file);
 
 #endif

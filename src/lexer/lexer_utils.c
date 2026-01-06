@@ -1,6 +1,6 @@
 #include "lexer_utils.h"
 
-const char* token_type_to_string(const enum Token_type type) {
+const char* token_type_to_string(const enum token_type type) {
     switch (type) {
         case TOKEN_COLON:
             return "COLON";
@@ -74,6 +74,3 @@ const char* token_type_to_string(const enum Token_type type) {
             return "UNKNOWN";
     }
 }
-
-
-

@@ -6,14 +6,14 @@
 #define MAX_LINE_LEN 1024
 #define MAX_IDENTIFIER_LENGTH 256
 
-enum Argument_type {
+enum argument_type {
     ARG_INT,
     ARG_FLOAT,
     ARG_CHAR,
 };
 
-struct Argument {
-    enum Argument_type type;
+struct argument {
+    enum argument_type type;
     union {
         int i;
         float f;
@@ -21,7 +21,7 @@ struct Argument {
     };
 };
 
-enum Node_type {
+enum node_type {
     NO_BODY,
 
     NO_ADD,
@@ -52,19 +52,19 @@ enum Node_type {
     NO_FUNCALL
 };
 
-struct Node {
-    enum Node_type type;
-    struct Node* lnode;
-    struct Node* rnode;
+struct node {
+    enum node_type type;
+    struct node* lnode;
+    struct node* rnode;
 
-    struct Node* code;  // IF, FOR
-    struct Node* then;  // IF or FOR body
-    struct Node* els;   // ELSE
-    struct Node* init;  // INIT FOR
-    struct Node* inc;   // INCREMENT FOR
+    struct node* code;  // IF, FOR
+    struct node* then;  // IF or FOR body
+    struct node* els;   // ELSE
+    struct node* init;  // INIT FOR
+    struct node* inc;   // INCREMENT FOR
 
-    struct Node* body;  // Point to the first node
-    struct Node* next;  // Point to the next node
+    struct node* body;  // Point to the first node
+    struct node* next;  // Point to the next node
 
     char name[MAX_IDENTIFIER_LENGTH];  // Name of var or Name of text
     bool use_identifier;
@@ -79,18 +79,18 @@ struct Node {
     int column;
 };
 
-enum Function_return_type { RET_INT, RET_CHAR, RET_FLOAT, RET_VOID };
+enum function_return_type { RET_INT, RET_CHAR, RET_FLOAT, RET_VOID };
 
-struct Function {
-    enum Function_return_type return_type;
-    struct Node* body;
+struct function {
+    enum function_return_type return_type;
+    struct node* body;
     int node_count;
-    struct Argument* arguments;
+    struct argument* arguments;
     char name[MAX_IDENTIFIER_LENGTH];
 };
 
-struct Function_list {
-    struct Function** functions;
+struct function_list {
+    struct function** functions;
     int count;
 };
 

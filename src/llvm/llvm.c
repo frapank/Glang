@@ -10,19 +10,19 @@
 #include "ast.h"
 #include "llvm_generator.h"
 
-void generate_llvm(struct Function_list function_list, const char* output_file)
+void llvm_generate(struct function_list function_list, const char* output_file)
 {
     // Find main function
     LLVMContextRef context = LLVMContextCreate();
     const LLVMModuleRef module = LLVMModuleCreateWithName("module");
-    struct Function* main_fun = get_function_by_name("main", function_list);
+    struct function* main_fun = ast_get_function_by_name("main", function_list);
     if (main_fun == NULL) {
         fprintf(stderr, "[-] Main entry point don't exist \n");
         exit(1);
     }
 
     // Print for debug
-    llvm_generator_generate_function_ir(main_fun, &module);
+    llvm_generator_function_ir(main_fun, &module);
     #ifdef DEBUG
     char* ir = LLVMPrintModuleToString(module);
     printf("\n[debug] Generated LLVM IR:\n");

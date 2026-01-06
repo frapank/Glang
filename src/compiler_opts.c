@@ -2,12 +2,11 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "error_utils.h"
 
 static _Bool initialized = 0;
 static struct compiler_opts copts;
 
-const struct compiler_opts* compiler_opts_get()
+const struct compiler_opts* compiler_opts_get(void)
 {
     if(!initialized) {
         fprintf(stderr, "args_get called before init\n");

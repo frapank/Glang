@@ -6,7 +6,7 @@ struct compiler_opts {
     char file_path[256];
 };
 
-const struct compiler_opts* compiler_opts_get();
+const struct compiler_opts* compiler_opts_get(void);
 int compiler_opts_init(int argc, const char* argv[]);
 
 #endif
