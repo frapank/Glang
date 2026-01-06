@@ -11,7 +11,7 @@ INCLUDE_DIR	:= include
 BUILD_DIR	:= build
 SRC_FILES	:= $(shell find $(SRC_DIR) -type f -name "*.c")
 
-NAME 		:= compiler
+NAME 		:= glang
 OUTPUT		:= $(BUILD_DIR)/$(NAME)
 
 all: build
