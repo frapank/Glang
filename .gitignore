@@ -2,10 +2,10 @@ build/
 .cache/
 
 compiler
-test.g
 compile_commands.json
+tags
 
+*.g
 *.o
-*.asm
 *.out
 *.swap
