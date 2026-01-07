@@ -1,24 +1,17 @@
 # G Compiler ![](https://img.shields.io/badge/Platform-Linux-blue) ![InDev](https://img.shields.io/badge/Status-Development%20Phase-red) ![LLVM-15](https://img.shields.io/badge/LLVM-15%2B-orange)
 
-## **On Hold**
-
-This project is temporarily suspended while I focus on my studies.
-
 ## **Description**
 
 This is a simple compiler for a custom-made language that I am creating. It will be a C-like language with some modern features.
 You may ask why this project? It's simple: I noticed how today's technology has spoiled us in the programming world, so my goal is to build this project using plain C, without any IDE. I'm using Vim without autocomplete or error checking — just me and my code.
 
-## **Build & Run**
+## **Build**
 
 ```bash
-git clone https://github.com/frapank/gourmet-compiler.git
-cd gourmet-compiler/
-mkdir build
-cd build
-cmake ..
-make
-./compiler
+git clone https://github.com/frapank/Glang.git
+cd Glang/
+./configure
+make build
 ```
 
 ## **Tech Stack**
