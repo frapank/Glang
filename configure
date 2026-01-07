@@ -1,0 +1,81 @@
+#!/bin/bash
+
+## -- var --
+MK=config.mk
+COMPILER=gcc
+DEBUG=0
+FLAGS="-Wall -Wextra -Wpedantic -std=gnu17 "
+
+# Options
+while (($#)); do
+    case "$1" in
+        --compiler=*)
+            COMPILER="${1#--compiler=}"; shift
+            ;;
+        --enable-debug)
+            DEBUG=1; shift
+            ;;
+        --help|-h)
+            cat <<'EOF'
+Usage...
+EOF
+            exit 0
+            ;;
+    esac
+done
+
+rm -rf "$MK"
+
+## -- compiler --
+cat > test.c <<'EOF'
+int main(){}
+EOF
+
+# Check if compiler exit
+if command -v "$COMPILER" >/dev/null 2>&1; then
+    printf "CC := %s\n" "$COMPILER" >> "$MK"
+    echo "[+] $COMPILER compiler selected"
+else
+    echo "[-] $COMPILER compiler doesn't exist" >&2
+    rm -f test.c
+    exit 1
+fi
+
+# Check support for gnu17
+if "$COMPILER" -std=gnu17 -o test.o test.c >/dev/null 2>&1; then
+    FLAGS="$FLAGS -std=gnu17"
+else
+    echo "[-] $COMPILER doesn't support -std=gnu17"
+    rm -f test.o test.c "$MK"
+    exit 1
+fi
+
+# Check if debug is enabled
+if [ "$DEBUG" -eq 1 ]; then
+    FLAGS="$FLAGS -g -O0 -DDEBUG"
+    echo "[+] Debug flags enabled: -g -O0 -DDEBUG"
+else
+    FLAGS="$FLAGS -O2 -DNDEBUG"
+fi
+
+# Write flags
+printf "FLAGS := %s\n" "$FLAGS" >> "$MK"
+
+# Clean up
+rm -f test.o test.c
+
+## -- llvm-libs --
+if command -v llvm-config >/dev/null 2>&1; then
+    cat >> "$MK" <<'EOF'
+LDLIBS := $(shell llvm-config --libs core analysis executionengine native \
+    x86codegen x86desc x86info x86asmparser x86disassembler \
+    mcjit orcjit passes support target) \
+    $(shell llvm-config --system-libs) -ldl -lpthread
+EOF
+    echo "[+] llvm-config found, LDLIBS set"
+else
+    echo "[-] llvm-config not found" >&2
+    printf "LDLIBS := %s\n" "" >> "$MK"
+    rm -f "$MK"
+    exit 1
+fi
