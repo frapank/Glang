@@ -1,9 +1,10 @@
 #include "compiler.h"
 #include "compiler_opts.h"
 
-int main(int argc, const char* argv[]) 
+int main(int argc, char** argv) 
 {
-    compiler_opts_init(argc, argv);
-
+    if(compiler_opts_init(argc, argv)) 
+        return 1;
+        
     compile_file();
 }
