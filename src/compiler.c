@@ -5,8 +5,9 @@
 #include "llvm.h"
 #include "lexer_utils.h"
 #include "compiler_opts.h"
+#include "common.h"
 
-_Noreturn static void compiler_file_not_found_error(const char* file_path) 
+NORETURN static void compiler_file_not_found_error(const char* file_path) 
 {
     if (file_path == NULL)
         fprintf(stderr, "[-] You should specify an argument \n");
@@ -16,7 +17,7 @@ _Noreturn static void compiler_file_not_found_error(const char* file_path)
 }
 
 
-_Noreturn static void compiler_memory_allocation_error(void) 
+NORETURN static void compiler_memory_allocation_error(void) 
 {
     fprintf(stderr, "[-] Can't allocate memory \n");
     exit(1);
