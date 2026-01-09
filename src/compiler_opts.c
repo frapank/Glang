@@ -35,6 +35,11 @@ int compiler_opts_init(int argc, char** argv)
     copts.num_files = argc - optind;
     copts.files = argv + optind;
 
+    if(!copts.output_path_present) {
+        snprintf(copts.output_path, sizeof(copts.output_path), "%s", "out.a");
+        copts.output_path_present = 1;
+    }
+
     if(copts.num_files <= 0) {
         printf("[-] No file specified: glang [OPTIONS] <FILES>\n");
         return 1;
