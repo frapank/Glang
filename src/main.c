@@ -1,5 +1,3 @@
-#include <stdlib.h>
-#include <wchar.h>
 #include <stddef.h>
 
 #include "compiler.h"
@@ -14,7 +12,10 @@ int main_real(int argc, char *argv[])
     return 0;
 }
 
-#if defined(_MSC_VER)
+#ifdef _MSC_VER
+
+#include <stdlib.h>
+#include <wchar.h>
 
 int wmain(int argc, wchar_t *wargv[])
 {
